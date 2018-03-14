@@ -1,0 +1,6 @@
+import requests
+import json
+r = requests.get("https://api.binance.com")
+parameter = {"symbol":"BTCUSDT", "interval":"15m"}
+kline = requests.get("https://api.binance.com/api/v1/klines", params=parameter)
+print(kline.json())
