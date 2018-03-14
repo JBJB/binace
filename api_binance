@@ -1,6 +1,24 @@
+from apscheduler.schedulers.blocking import BlockingScheduler
 import requests
-import json
+
 r = requests.get("https://api.binance.com")
-parameter = {"symbol":"BTCUSDT", "interval":"15m"}
-kline = requests.get("https://api.binance.com/api/v1/klines", params=parameter)
-print(kline.json())
+prijzen = []
+
+def check_prijs():
+    parameter = {"symbol": "BTCUSDT"}
+    price_ticker = requests.get("https://api.binance.com/api/v3/ticker/price", params=parameter)
+    prijs = price_ticker.json()["price"]
+    prijzen.append(prijs)
+
+def prijzen_omlaag():
+    check_prijs()
+    if len(prijzen) >= 3:
+        if prijzen[-1] < prijzen[-2] and prijzen[-2] < prijzen[-3]:
+            print("Prijs gaat omlaag" + str(prijzen))
+
+
+
+scheduler = BlockingScheduler()
+scheduler.add_job(prijzen_omlaag, 'interval', seconds=3)
+
+scheduler.start()
