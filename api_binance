@@ -1,5 +1,8 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 import requests
+import time
+import hashlib
+
 
 r = requests.get("https://api.binance.com")
 prijzen = []
@@ -12,9 +15,11 @@ def check_prijs():
 
 def prijzen_omlaag():
     check_prijs()
-    if len(prijzen) >= 3:
+    print(prijzen)
+    if len(prijzen) > 3:
+        del prijzen[:-3]
         if prijzen[-1] < prijzen[-2] and prijzen[-2] < prijzen[-3]:
-            print("Prijs gaat omlaag" + str(prijzen))
+            print("Prijs gaat omlaag: " + str(prijzen))
 
 
 
